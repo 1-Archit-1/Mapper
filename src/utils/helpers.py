@@ -148,12 +148,17 @@ def setup_logging():
 
 ## Create a database connection using SQLAlchemy with ODBC drivers,
 # prioritizing modern drivers and falling back to legacy if necessary.
-def create_engine_connection(server, database, fast_executemany=True):
+def create_engine_connection(server, database, username=None, password=None, fast_executemany=True):
 	# Strip square brackets from database name - they're not valid in connection strings
 	database = database.strip('[]')
 	installed_drivers = pyodbc.drivers()
 	selected_driver = None
-	trust_cert = 'Trusted_Connection=yes;'
+	
+	if username and password:
+		trust_cert = f'UID={username};PWD={password};'
+	else:
+		trust_cert = 'Trusted_Connection=yes;'
+		
 	is_legacy = False
 
 	# --- Modern ODBC Drivers ---

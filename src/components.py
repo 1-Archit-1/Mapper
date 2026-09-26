@@ -132,7 +132,7 @@ def database_connection_ui(
     default_server:Optional[str] = None,
     default_database: Optional[str] = None,
     show_subheader: bool = True
-) -> Optional[Tuple[str, str, str]]:
+) -> Optional[Tuple[str, str, Optional[str], Optional[str], str]]:
     """
     Render complete database connection UI with server/database/table inputs.
     Handles saved servers, recent history, test connection, and data fetching.
@@ -190,6 +190,16 @@ def database_connection_ui(
         key=f'{key_prefix}_db_select',
         accept_new_options=True
     )
+    use_win_auth = st.checkbox("Use Windows Authentication", value=True, key=f'{key_prefix}_win_auth')
+    username = None
+    password = None
+    if not use_win_auth:
+        cred_col1, cred_col2 = st.columns(2)
+        with cred_col1:
+            username = st.text_input("Username", key=f'{key_prefix}_username')
+        with cred_col2:
+            password = st.text_input("Password", type="password", key=f'{key_prefix}_password')
+            
     recent_tables = get_recent_tables()
     table = st.selectbox(
         "Table:",
@@ -197,15 +207,14 @@ def database_connection_ui(
         key=f'{key_prefix}_table_select',
         accept_new_options=True
     )
-    st.caption('Currently supports only Windows Auth with SQL Server')
-    return server, database, table
+    return server, database, username, password, table
 
 
 def event_database_connection_ui(
     key_prefix: str,
     default_config: Dict,
     show_subheader: bool = True
-) -> Optional[Tuple[str, str, str]]:
+) -> Optional[Tuple[str, str, Optional[str], Optional[str], str]]:
     """Render database connection UI specifically for event shapefile tab,
     Sets defaults to the location_shape_mapper_prod database on catdb.
     Detects standard table names in that database for easier selection."""
@@ -257,9 +266,19 @@ def event_database_connection_ui(
         accept_new_options=True
     )
 
+    use_win_auth = st.checkbox("Use Windows Authentication", value=True, key=f'{key_prefix}_win_auth')
+    username = None
+    password = None
+    if not use_win_auth:
+        cred_col1, cred_col2 = st.columns(2)
+        with cred_col1:
+            username = st.text_input("Username", key=f'{key_prefix}_username')
+        with cred_col2:
+            password = st.text_input("Password", type="password", key=f'{key_prefix}_password')
+            
     #detect when database is picked
     if database:
-        exposure_tables_list = detect_base_exposure_tables(server, database, table_wildcard = default_config.get('base_exposure_table_wildcard'))
+        exposure_tables_list = detect_base_exposure_tables(server, database, default_config.get('base_exposure_table_wildcard'), username, password)
         recent_tables = get_recent_tables(event_dashboard=True)
         table_options = [""] + exposure_tables_list + recent_tables
         table = st.selectbox(
@@ -268,13 +287,12 @@ def event_database_connection_ui(
             key=f'{key_prefix}_table_select',
             accept_new_options=True
         )
-        st.caption('Currently supports only Windows Auth with SQL Server')
-        return server, database, table
+        return server, database, username, password, table
 
-def detect_base_exposure_tables(server: str, database: str, table_wildcard: str) -> list[str]:
+def detect_base_exposure_tables(server: str, database: str, table_wildcard: str, username: str = None, password: str = None) -> list[str]:
     """Detect tables in the database that match common exposure table naming patterns."""
     try:
-        engine = create_engine_connection(server, database)
+        engine = create_engine_connection(server, database, username, password)
     except Exception as e:
         logging.error(f"Error creating engine for table detection: {str(e)}")
         logging.error(traceback.format_exc())
@@ -299,6 +317,8 @@ def database_test_fetch_ui(
     database: str,
     table: str,
     key_prefix: str,
+    username: str = None,
+    password: str = None,
     reset_func=lambda: None
 ):
     # Test connection and fetch data
@@ -311,7 +331,7 @@ def database_test_fetch_ui(
             if st.button("🔌 Test", key=f'{key_prefix}_test_conn', width='stretch'):
                 with st.spinner("Testing connection..."):
                     try:
-                        engine = create_engine_connection(server, database)
+                        engine = create_engine_connection(server, database, username, password)
                         with engine.connect() as conn:
                             pass
                         status_slot.success("Connection successful!")
@@ -328,7 +348,7 @@ def database_test_fetch_ui(
                     with progress_slot.container():
                         with st.spinner("Fetching data..."):
                             progress_text = st.empty()
-                            engine = create_engine_connection(server, database)
+                            engine = create_engine_connection(server, database, username, password)
                             table_obj = parse_db_object(table, default_schema=None)
                             table_label = table_obj.schema_table
                             df = fetch_data_from_db(
@@ -360,7 +380,7 @@ def database_test_fetch_ui(
                 try:
                     with progress_slot.container():
                         with st.spinner("Loading column names..."):
-                            engine = create_engine_connection(server, database)
+                            engine = create_engine_connection(server, database, username, password)
                             table_obj = parse_db_object(table, default_schema=None)
                             table_label = table_obj.schema_table
                             cols = fetch_table_columns(engine, table_label)
@@ -392,7 +412,7 @@ def database_test_fetch_ui(
                     with progress_slot.container():
                         with st.spinner("Fetching data..."):
                             progress_text = st.empty()
-                            engine = create_engine_connection(server, database)
+                            engine = create_engine_connection(server, database, username, password)
                             table_obj = parse_db_object(table, default_schema=None)
                             table_label = table_obj.schema_table
                             df = fetch_data_from_db(
@@ -432,7 +452,7 @@ def event_database_test_fetch_ui(
         if st.button("🔌 Test Connection", key=f'event_shape_test_conn', width='stretch'):
             with st.spinner("Testing connection..."):
                 try:
-                    engine = create_engine_connection(server, database)
+                    engine = create_engine_connection(server, database, username, password)
                     with engine.connect() as conn:
                         pass  # Just test the connection
                     st.success("Connection successful!")
@@ -447,7 +467,7 @@ def event_database_test_fetch_ui(
             with st.spinner("Fetching data from database..."):
                 progress_text = st.empty()
                 try:
-                    engine = create_engine_connection(server, database)
+                    engine = create_engine_connection(server, database, username, password)
                     table_obj = parse_db_object(table, default_schema=None)
                     table_label = table_obj.schema_table
                     df = fetch_data_from_db(
@@ -629,7 +649,7 @@ def save_outputs_ui(
     with col2:
         with st.expander("💾 Save Results to DB Table", expanded=False):
             # Reuse database UI component with prefilled values
-            output_server, output_database, output_table = database_connection_ui(
+            output_server, output_database, output_username, output_password, output_table = database_connection_ui(
                 key_prefix=f'{key_prefix}_output',
                 default_server=input_server,
                 default_database=input_database,
@@ -666,7 +686,7 @@ def save_outputs_ui(
                                 engine.dispose()  # Dispose the old engine and create a new one
 
                         if not inserted:
-                            engine = create_engine_connection(output_server, output_database)
+                            engine = create_engine_connection(output_server, output_database, output_username, output_password)
                             st.session_state[f'engine_{output_server}_{output_database}'] = engine
                             try:
                                 insert_data_to_db(engine, selected_output_df, output_table)
@@ -735,7 +755,9 @@ def event_dashboard_save_outputs_ui(
     output_df: pd.DataFrame,
     key_prefix: str,
     default_config: Dict,
-    detected_location_details_table: Optional[str] = None
+    detected_location_details_table: Optional[str] = None,
+    output_username: Optional[str] = None,
+    output_password: Optional[str] = None
 ):
     # form for saving outputs with prefilled values and detected table suggestions
     st.markdown("#### Save Results")
@@ -829,7 +851,7 @@ def event_dashboard_save_outputs_ui(
             try:
                 progress.progress(25, text="Saving raw table...")
                 output_table_obj = parse_db_object(output_table, default_schema=None)
-                engine = create_engine_connection(output_server, output_database)
+                engine = create_engine_connection(output_server, output_database, output_username, output_password)
                 insert_data_to_db(
                     engine,
                     output_df,

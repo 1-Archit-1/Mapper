@@ -22,8 +22,14 @@ from src.Config import Config
 def get_database_config(config: Config):
 	server = config.get_env('server', prompt="Enter server name: ")
 	database = config.get_env('database', prompt="Enter database name: ")
+	use_windows_auth = config.get_bool('use_windows_auth', prompt="Use Windows Authentication? (y/n): ")
+	username = None
+	password = None
+	if not use_windows_auth:
+		username = config.get_env('db_username', prompt="Enter database username: ")
+		password = config.get_env('db_password', prompt="Enter database password: ")
 	table = config.get_env('table', prompt="Enter table name: ")
-	return server, database, table
+	return server, database, username, password, table
 
 
 def main(config: Config):
@@ -35,11 +41,11 @@ def main(config: Config):
 		print("Defaulting to CSV input mode. Please ensure you have a CSV file with Latitude and Longitude columns.")
 
 	if use_db_for_source_data:
-		server, db, table = get_database_config(config)
+		server, db, username, password, table = get_database_config(config)
 		print(f"Using server: {server}, database: {db}, table: {table}")
 
 		print("\nConnecting to database...")
-		engine = create_engine_connection(server, db)
+		engine = create_engine_connection(server, db, username, password)
 		df_table = fetch_data_from_db(engine, table)
 		print(f"Fetched {len(df_table)} records from {table}")
 	else:

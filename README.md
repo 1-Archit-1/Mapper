@@ -8,7 +8,7 @@ Location Mapper is a geospatial analysis toolkit that provides **two powerful wo
 
 Both workflows support:
 - Reading locations from SQL databases or CSV files
-- Currently supports only Windows Auth with MS SQL server. Support for other DBs coming soon
+- Currently supports MS SQL server (Windows Authentication and SQL Server Authentication). Support for other DBs coming soon
 - Interactive map visualization
 - Multiple output formats (CSV, SQL tables, shapefiles, GeoJSON)
 

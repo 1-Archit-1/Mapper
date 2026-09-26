@@ -91,7 +91,7 @@ def render_event_shapefile_tab():
 				st.error(str(e))
 				return
 
-			server, database, table = event_database_connection_ui(
+			server, database, username, password, table = event_database_connection_ui(
 				key_prefix="event_shape",
 				default_config=default_config,
 			)
@@ -107,7 +107,7 @@ def render_event_shapefile_tab():
 				#Find table columns
 				engine = None
 				try:
-					engine = create_engine_connection(server, database)
+					engine = create_engine_connection(server, database, username, password)
 				except Exception as e:
 					st.session_state[error_key] = f"Error connecting to {server}.{database}: {str(e)}"
 					st.error(f"❌ {st.session_state[error_key]}")
@@ -316,7 +316,9 @@ def render_event_shapefile_tab():
 				output_df=output_df,
 				default_config=default_config,
 				key_prefix="event_shape_results",
-				detected_location_details_table=base_location_details_table
+				detected_location_details_table=base_location_details_table,
+				output_username=username,
+				output_password=password
 			)
 
 		with map_container:

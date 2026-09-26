@@ -77,8 +77,8 @@ def render_shapefile_tab():
 				st.markdown("#### 1. Upload Files")
 				csv_uploader("shape", reset_func=reset_shapefile_state)
 			else:
-				server, database, table = database_connection_ui(key_prefix="shape")
-				database_test_fetch_ui(server=server, database=database, table=table, key_prefix="shape", reset_func = reset_shapefile_state)
+				server, database, username, password, table = database_connection_ui(key_prefix="shape")
+				database_test_fetch_ui(server=server, database=database, table=table, key_prefix="shape", username=username, password=password, reset_func = reset_shapefile_state)
 
 	# ==================== COMMON PROCESSING ====================
 	df = st.session_state.get("shape_active_input_df")

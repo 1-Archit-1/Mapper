@@ -69,8 +69,8 @@ def render_raster_tab():
 				st.markdown("#### 1. Upload Files")
 				csv_uploader(key_prefix = 'raster', reset_func = reset_raster_state)
 			else:
-				server, database, table = database_connection_ui(key_prefix="raster")
-				database_test_fetch_ui(server = server, database = database, table = table, key_prefix = "raster", reset_func = reset_raster_state)
+				server, database, username, password, table = database_connection_ui(key_prefix="raster")
+				database_test_fetch_ui(server = server, database = database, table = table, key_prefix = "raster", username=username, password=password, reset_func = reset_raster_state)
 		with col2:
 			st.markdown("#### 2. Upload Raster File")
 			raster_file = st.file_uploader("Upload Raster File", type=['tif', 'tiff', 'img'], key='raster_file_db', on_change=reset_raster_state)
