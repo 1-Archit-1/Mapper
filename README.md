@@ -6,6 +6,8 @@ Location Mapper is a geospatial analysis toolkit that provides **two powerful wo
 1. **Raster Value Extraction** - Extract values from raster/GeoTIFF files (flood depths, elevation, etc.) at specific location coordinates
 2. **Shapefile Intersection** - Map locations to GIS shapefiles and perform spatial intersections
 
+Locations are mapped using coordinates, Latitude or Longitude columns are mandatory. 
+
 Both workflows support:
 - Reading locations from SQL databases or CSV files
 - Currently supports MS SQL server (Windows Authentication and SQL Server Authentication). Support for other DBs coming soon
