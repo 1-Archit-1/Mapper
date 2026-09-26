@@ -24,9 +24,9 @@ echo 1. Rasters
 echo 2. Shapefiles
 set /p choice=Enter your choice (1 or 2):
 if "%choice%"=="1" (
-    set "mapper_script=location_raster_mapping.py"
+    set "mapper_script=location_raster_mapping_cli.py"
 ) else if "%choice%"=="2" (
-    set "mapper_script=location_shape_mapping.py"
+    set "mapper_script=location_shape_mapping_cli.py"
 ) else (
     echo Invalid choice. Exiting.
     pause

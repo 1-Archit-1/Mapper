@@ -7,7 +7,6 @@ All tab-specific logic is in separate modules for better maintainability.
 import streamlit as st
 from src.location_mapper.shapefile_tab import render_shapefile_tab
 from src.location_mapper.raster_tab import render_raster_tab
-from src.location_mapper.event_shapefile_tab import render_event_shapefile_tab
 from src.db_config import get_saved_servers, remove_server
 from src.utils import setup_logging
 
@@ -66,7 +65,7 @@ with st.sidebar:
     """)
 
     st.markdown("---")
-    st.caption("DB defaults in db_connections.json; user state in db_connections.user.json")
+    st.caption("DB user state in db_connections.user.json")
 
     # Manage saved servers
     with st.expander("⚙️ Manage Saved Servers"):

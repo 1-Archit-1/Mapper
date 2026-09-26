@@ -74,7 +74,7 @@ def main(config: Config):
 		print(f"Selected Primary Key columns: {pkey}")
 	raster = load_rasterfile(config)
 	print(f"\nLoaded raster: {raster.name}")
-	joined = join_with_raster(df_table, raster, config)
+	joined = join_with_raster(df_table, raster, latitude, longitude)
 	print(f"\nJoined raster values to dataframe. New columns added: {[col for col in joined.columns if col.startswith('Band_') or col == 'Raster_Value']}")
 
 	if use_db_for_source_data:

@@ -28,6 +28,6 @@ echo   Press Ctrl+C to stop the server
 echo ========================================
 echo.
 
-uv run streamlit run location_mapper_app.py
+uv run streamlit run location_mapper_webapp.py
 
 pause
