@@ -592,9 +592,12 @@ def save_outputs_ui(
     output_filename: str,
     key_prefix: str,
     input_server: Optional[str] = None,
-    input_database: Optional[str] = None
+    input_database: Optional[str] = None,
+    lat_col: Optional[str] = None,
+    lon_col: Optional[str] = None
 ):
     csv_cache_key = f"{key_prefix}_csv_output"
+    geojson_cache_key = f"{key_prefix}_geojson_output"
     csv_source_id_key = f"{key_prefix}_csv_source_id"
     csv_selected_cols_key = f"{key_prefix}_csv_selected_cols"
     selected_columns_key = f"{key_prefix}_save_columns"
@@ -628,14 +631,29 @@ def save_outputs_ui(
         or st.session_state.get(csv_selected_cols_key) != selected_columns_tuple
     ):
         st.session_state[csv_cache_key] = selected_output_df.to_csv(index=False)
+        
+        if lat_col and lon_col and lat_col in selected_output_df.columns and lon_col in selected_output_df.columns:
+            import geopandas as gpd
+            gdf = gpd.GeoDataFrame(
+                selected_output_df,
+                geometry=gpd.points_from_xy(selected_output_df[lon_col], selected_output_df[lat_col]),
+                crs="EPSG:4326"
+            )
+            st.session_state[geojson_cache_key] = gdf.to_json()
+        else:
+            st.session_state[geojson_cache_key] = None
+            
         st.session_state[csv_source_id_key] = source_id
         st.session_state[csv_selected_cols_key] = selected_columns_tuple
 
     csv_output = st.session_state[csv_cache_key]
+    geojson_output = st.session_state.get(geojson_cache_key)
 
-    col1, col2 = st.columns(2)
+    has_geojson = geojson_output is not None
+    cols = st.columns(3) if has_geojson else st.columns(2)
+    
     # Download CSV button
-    with col1:
+    with cols[0]:
         st.download_button(
             label="📥 Download Results CSV",
             data=csv_output,
@@ -645,8 +663,19 @@ def save_outputs_ui(
             width='stretch'
         )
 
+    if has_geojson:
+        with cols[1]:
+            st.download_button(
+                label="📥 Download GeoJSON",
+                data=geojson_output,
+                file_name=output_filename.replace('.csv', '.geojson'),
+                mime="application/geo+json",
+                disabled=not bool(selected_columns),
+                width='stretch'
+            )
+
     # Save to database option
-    with col2:
+    with cols[-1]:
         with st.expander("💾 Save Results to DB Table", expanded=False):
             # Reuse database UI component with prefilled values
             output_server, output_database, output_username, output_password, output_table = database_connection_ui(

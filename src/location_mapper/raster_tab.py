@@ -219,7 +219,9 @@ def render_raster_tab():
 				output_filename="raster_values_results.csv",
 				key_prefix='raster_results',
 				input_server=input_server,
-				input_database=input_database
+				input_database=input_database,
+				lat_col=col_config['lat_col'],
+				lon_col=col_config['lon_col']
 			)
 
 		with map_container:
