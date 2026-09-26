@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+venv/
+
+# Environment variables
+.env
+
+# IDEs
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+#Shapes
+shapes/
+shapes_new/
+# Copilot instructions (generated, not committed)
+.github/
+
+# Large test artifacts (keep local only)
+test_files/output_with_two_bands.tif
+
+# User-specific DB state
+db_connections.user.json
+AON/downloads/
+AON-pavol/downloads/
+AON-vs-MIS/
+.agents/
+.kiro/
+skills-lock.json
+
+test_files/AIR_Cloud_2_2-25-2026.zip

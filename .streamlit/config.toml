@@ -1,0 +1,14 @@
+# Streamlit Configuration for Production
+
+[client]
+# Hide the hamburger menu buttons
+toolbarMode = "viewer"  # Options: "auto", "developer", "viewer", "minimal"
+
+[browser]
+gatherUsageStats = false
+
+[theme]
+base = "light"  # Options: "light", "dark"
+font = "sans serif"  # Options: "sans serif", "serif", "monospace"
+
+baseFontSize = 12

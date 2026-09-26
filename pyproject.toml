@@ -1,0 +1,26 @@
+[project]
+name = "location-shape-mapper-main"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "branca>=0.8.2",
+    "contextily>=1.7.0",
+    "dotenv>=0.9.9",
+    "folium>=0.20.0",
+    "geodatasets>=2026.1.0",
+    "geopandas>=1.1.2",
+    "matplotlib>=3.10.8",
+    "pandas>=2.3.3",
+    "plotly>=6.6.0",
+    "pyodbc>=5.3.0",
+    "rasterio>=1.4.4",
+    "requests>=2.32.5",
+    "sqlalchemy>=2.0.48",
+    "streamlit>=1.55.0",
+    "streamlit-folium>=0.26.2",
+    "streamlit-tree-select>=0.0.5",
+    "rich>=13.0.0",
+    "questionary>=2.0.0",
+]
