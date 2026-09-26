@@ -122,7 +122,7 @@ def render_raster_tab():
 						st.info(f"Raster info: {num_bands} band(s), NoData value: {nodata_value}")
 
 						# Extract values using helper function
-						result_raster = join_with_raster(df, raster, config)
+						result_raster = join_with_raster(df, raster, col_config['lat_col'], col_config['lon_col'])
 
 						st.session_state.raster_result_df = result_raster
 						st.session_state.raster_retain_valid_only = retain_valid_only

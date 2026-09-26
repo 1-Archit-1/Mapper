@@ -517,7 +517,8 @@ def create_geodataframe(
 def join_with_raster(
 	df: pd.DataFrame,
 	raster: rasterio.io.DatasetReader,
-	config: Config
+	lat_col: str,
+	lon_col: str
 ):
 	"""Join location data with raster values based on lat/lon coordinates.
 	Returns a DataFrame with an additional column for raster values.
@@ -525,9 +526,6 @@ def join_with_raster(
 	num_bands = raster.count
 	nodata_value = raster.nodata
 
-	# Get lat/lon column names from config
-	lat_col = config.get_env('latitude_col')
-	lon_col = config.get_env('longitude_col')
 
 	lons = df[lon_col].values
 	lats = df[lat_col].values
