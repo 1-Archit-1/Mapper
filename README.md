@@ -7,7 +7,8 @@ Location Mapper is a geospatial analysis toolkit that provides **two powerful wo
 2. **Shapefile Intersection** - Map locations to GIS shapefiles and perform spatial intersections
 
 Both workflows support:
-- Reading locations from SQL Server databases or CSV files
+- Reading locations from SQL databases or CSV files
+- Currently supports only Windows Auth with MS SQL server. Support for other DBs coming soon
 - Interactive map visualization
 - Multiple output formats (CSV, SQL tables, shapefiles, GeoJSON)
 
@@ -30,9 +31,14 @@ Or visit: https://docs.astral.sh/uv/getting-started/installation/
 - Open the unzipped folder in File Explorer
 - All commands below should be run from inside this directory
 
-### 3. Run Setup (One-Time)
+### 3. Windows: Run Setup (One-Time)
 - Double-click `setup.bat`
 - Wait for it to complete
+
+### 3. Linux: Run Setup (One-Time)
+- Open the terminal in the unzipped folder
+- Run `uv sync` to install dependencies
+- Run `streamlit run location_mapper_webapp.py` to start the app
 
 ---
 ## Two Ways to Run
