@@ -35,10 +35,10 @@ Or visit: https://docs.astral.sh/uv/getting-started/installation/
 - Double-click `setup.bat`
 - Wait for it to complete
 
-### 3. Linux: Run Setup (One-Time)
+### 3. Linux/macOS: Run Setup (One-Time)
 - Open the terminal in the unzipped folder
-- Run `uv sync` to install dependencies
-- Run `streamlit run location_mapper_webapp.py` to start the app
+- Run `./setup.sh`
+- Wait for it to complete
 
 ---
 ## Two Ways to Run
@@ -47,7 +47,8 @@ Or visit: https://docs.astral.sh/uv/getting-started/installation/
 Interactive Streamlit web interface with live maps, data previews, and visual configuration.
 
 **To launch:**
-- Double-click `run_webapp.bat`
+- **Windows:** Double-click `run_location_mapper_webapp.bat`
+- **Linux/macOS:** Run `./run_location_mapper_webapp.sh` in the terminal
 - Your browser will open automatically
 - Use the tabs to select your workflow (Raster or Shapefile)
 
@@ -58,7 +59,8 @@ Fast batch processing for automated workflows and scripting.
 - Tool will use these settings automatically for repeated runs
 
 **To launch:**
-- Double-click `run_location_mapper.bat`
+- **Windows:** Double-click `run_location_mapper_cli.bat`
+- **Linux/macOS:** Run `./run_location_mapper_cli.sh` in the terminal
 - Choose between Raster (1) or Shapefile (2) mode
 - Follow the prompts
 
@@ -115,11 +117,12 @@ Perform spatial intersection between locations and shapefile boundaries.
 ## Common Issues
 
 **"uv not found"**
-- Install uv: `powershell -c "irm https://astral.sh/uv/install.ps1 | iex"`
+- Windows: Install uv: `powershell -c "irm https://astral.sh/uv/install.ps1 | iex"`
+- Linux/macOS: Install uv: `curl -LsSf https://astral.sh/uv/install.sh | sh`
 - Restart your terminal after installation
 
 **"Virtual environment not found" or "uv sync failed"**
-- Run `setup.bat` to create the environment
+- Run `setup.bat` (Windows) or `./setup.sh` (Linux/macOS) to create the environment
 - Make sure you have internet connection for package downloads
 
 **"Failed to connect to database"**
@@ -155,13 +158,13 @@ If you prefer running commands directly:
 
 ```powershell
 # Run web app
-uv run streamlit run app.py
+uv run streamlit run location_mapper_webapp.py
 
 # Run CLI tool (raster mode)
-uv run python location_raster_mapping.py
+uv run python location_raster_mapping_cli.py
 
 # Run CLI tool (shapefile mode)
-uv run python location_shape_mapping.py
+uv run python location_shape_mapping_cli.py
 ```
 
 ### Update Dependencies
@@ -183,7 +186,7 @@ uv lock  # Regenerate lock file after adding packages
 
 ## Requirements
 
-- Windows OS (batch files are Windows-specific)
+- Windows, Linux, or macOS
 - uv package manager
 - Python 3.11 (installed automatically by uv)
 - Internet connection for first-time setup
