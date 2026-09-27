@@ -16,55 +16,70 @@ Both workflows support:
 
 ---
 
-## First Time Setup
+## Setup Instructions
 
-### 1. Install uv Package Manager
-uv is a fast Python package manager
-**Install command:**
-```powershell
-powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
-```
+### Option A: Run with Docker (Recommended)
+Docker provides the easiest way to run the application with all dependencies (including MS SQL Server ODBC drivers) pre-configured.
+1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+2. Clone the repository:
+   ```bash
+   git clone <your-repo-url>
+   cd Mapper
+   ```
 
-Or visit: https://docs.astral.sh/uv/getting-started/installation/
+### Option B: Local Setup
+If you prefer to run the application locally without Docker, you will need the `uv` package manager.
 
-### 2. Download repo
-[GitHub](https://github.com) (click the green "Code" button, then "Download ZIP")
-- Unzip the downloaded file
-- Open the unzipped folder in File Explorer
-- All commands below should be run from inside this directory
+1. **Install uv:**
+   - Windows: `powershell -c "irm https://astral.sh/uv/install.ps1 | iex"`
+   - Linux/macOS: `curl -LsSf https://astral.sh/uv/install.sh | sh`
+   *(Or visit the [official documentation](https://docs.astral.sh/uv/getting-started/installation/))*
 
-### 3. Windows: Run Setup (One-Time)
-- Double-click `setup.bat`
-- Wait for it to complete
+2. **Clone the repository:**
+   ```bash
+   git clone <your-repo-url>
+   cd Mapper
+   ```
 
-### 3. Linux/macOS: Run Setup (One-Time)
-- Open the terminal in the unzipped folder
-- Run `./setup.sh`
-- Wait for it to complete
+3. **Initialize the environment:**
+   - **Windows:** Double-click `setup.bat`
+   - **Linux/macOS:** Run `./setup.sh`
 
 ---
-## Two Ways to Run
 
-### **Option 1: Web App (Recommended)**
+## Running the Application
+
+### Option 1: Web App (Recommended)
 Interactive Streamlit web interface with live maps, data previews, and visual configuration.
 
-**To launch:**
+**Via Docker:**
+```bash
+docker-compose up
+```
+*(The app will be available in your browser at `http://localhost:8501`)*
+
+**Via Local Environment:**
 - **Windows:** Double-click `run_location_mapper_webapp.bat`
 - **Linux/macOS:** Run `./run_location_mapper_webapp.sh` in the terminal
-- Your browser will open automatically
-- Use the tabs to select your workflow (Raster or Shapefile)
+- Your browser will open automatically.
 
-### **Option 2: Command Line Tool**
+### Option 2: Command Line Tools
 Fast batch processing for automated workflows and scripting.
-- Copy `.env.example` to `.env`
-- Edit `.env` with your settings
-- Tool will use these settings automatically for repeated runs
+*Note: Copy `.env.example` to `.env` and configure your settings before running.*
 
-**To launch:**
+**Via Docker:**
+```bash
+# Run Raster workflow
+docker-compose run --rm cli-raster
+
+# Run Shapefile workflow
+docker-compose run --rm cli-shapefile
+```
+
+**Via Local Environment:**
 - **Windows:** Double-click `run_location_mapper_cli.bat`
 - **Linux/macOS:** Run `./run_location_mapper_cli.sh` in the terminal
-- Choose between Raster (1) or Shapefile (2) mode
-- Follow the prompts
+- Choose between Raster (1) or Shapefile (2) mode and follow the prompts.
 
 
 ---

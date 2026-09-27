@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # Web Application (Default)
+  webapp:
+    build: .
+    container_name: mapper_webapp
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./outputs:/app/outputs
+      - ./logs:/app/logs
+      # Map db_connections.user.json for persisting recent DB history
+      - ./db_connections.user.json:/app/db_connections.user.json
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  # CLI Tool - Raster Mode
+  # Usage: docker-compose run --rm cli-raster
+  cli-raster:
+    build: .
+    command: ["uv", "run", "python", "location_raster_mapping_cli.py"]
+    volumes:
+      - ./outputs:/app/outputs
+      - ./logs:/app/logs
+      - ./.env:/app/.env
+    environment:
+      - PYTHONUNBUFFERED=1
+    profiles:
+      - cli
+
+  # CLI Tool - Shapefile Mode
+  # Usage: docker-compose run --rm cli-shapefile
+  cli-shapefile:
+    build: .
+    command: ["uv", "run", "python", "location_shape_mapping_cli.py"]
+    volumes:
+      - ./outputs:/app/outputs
+      - ./logs:/app/logs
+      - ./.env:/app/.env
+    environment:
+      - PYTHONUNBUFFERED=1
+    profiles:
+      - cli

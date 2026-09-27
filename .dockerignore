@@ -1,0 +1,27 @@
+# Git
+.git
+.gitignore
+
+# Python/Environment
+.venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.python-version
+
+# App Specific
+test_files/
+outputs/
+logs/
+db_connections.user.json
+.env
+
+# MacOS/Windows
+.DS_Store
+Thumbs.db
